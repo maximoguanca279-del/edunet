@@ -15,20 +15,22 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Encriptamos la contraseña para que sea igual a la de la DB
       const datosLogin = {
         email: formData.email,
         password: encriptarDato(formData.password)
       };
 
-      const res = await axios.post('http://localhost:5000/api/auth/login', datosLogin);
+      // CAMBIO CLAVE: Usamos la URL de Render en lugar de localhost
+      const res = await axios.post('https://edunet-server.onrender.com/api/auth/login', datosLogin);
       
       localStorage.setItem('usuarioId', res.data.usuarioId);
       localStorage.setItem('nombre', res.data.nombre);
       
+      alert("¡Bienvenido!");
       navigate('/explorar');
     } catch (err) {
-      alert("Error: Credenciales incorrectas");
+      console.error(err);
+      alert("Error: Credenciales incorrectas o el servidor no responde.");
     }
   };
 
@@ -36,20 +38,8 @@ const Login = () => {
     <div className="registro-container">
       <form className="registro-box" onSubmit={handleSubmit}>
         <h2>🚀 Iniciar Sesión</h2>
-        <input 
-          type="email" 
-          name="email" 
-          placeholder="Tu Email" 
-          onChange={handleChange} 
-          required 
-        />
-        <input 
-          type="password" 
-          name="password" 
-          placeholder="Tu Contraseña" 
-          onChange={handleChange} 
-          required 
-        />
+        <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
+        <input type="password" name="password" placeholder="Contraseña" onChange={handleChange} required />
         <button type="submit" className="btn-registro">Entrar</button>
       </form>
     </div>
